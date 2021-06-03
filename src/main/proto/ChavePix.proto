@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zupacademy";
+option java_outer_classname = "ChavePixGrpc";
+
+package br.com.zupacademy;
+
+import "google/protobuf/timestamp.proto";
+
+// CADASTRA
+service CadastraChavePixService {
+
+    rpc Registra(CadastraChavePixRequest) returns (ChavePixCadastradaResponse) {}
+}
+
+enum TipoChaveRequest {
+    TIPO_CHAVE_UNSPECIFIED = 0;
+    TIPO_CHAVE_CPF = 1;
+    TIPO_CHAVE_TELEFONE = 2;
+    TIPO_CHAVE_EMAIL = 3;
+    TIPO_CHAVE_ALEATORIA = 4;
+}
+
+enum TipoContaRequest {
+    TIPO_CONTA_UNSPECIFIED = 0;
+    TIPO_CONTA_POUPANCA = 1;
+    TIPO_CONTA_CORRENTE = 2;
+}
+
+message CadastraChavePixRequest {
+    string cliente_id = 1;
+    TipoChaveRequest tipo_chave = 2;
+    string valor_chave = 3;
+    TipoContaRequest tipo_conta = 4;
+}
+
+message ChavePixCadastradaResponse {
+    string chave_pix_id = 1;
+}
+
+// DELETA
+service DeletaChavePixService {
+
+    //    rpc Deleta(DeletaChavePixRequest) returns (google.protobuf.Empty) {}
+    rpc Deleta(DeletaChavePixRequest) returns (DeletaChavePixResponse) {}
+}
+
+message DeletaChavePixRequest {
+    string cliente_id = 1;
+    string chave_pix_id = 2;
+}
+
+message DeletaChavePixResponse {
+}
+
+// CONSULTA
+service ConsultaChavePixService{
+    rpc Consulta(ConsultaChavePixRequest) returns (ConsultaChavePixResponse) {}
+    rpc ConsultaInterna(ConsultaInternaChavePixRequest) returns (ConsultaChavePixResponse) {}
+}
+
+message Conta {
+    string titular = 1;
+    string cpf = 2;
+    string instituicao = 3;
+    string agencia = 4;
+    string numero = 5;
+    TipoContaRequest tipo_conta = 6;
+}
+
+message  ConsultaChavePixRequest {
+    string cliente_id = 1;
+    string chave_pix_id = 2;
+}
+
+message  ConsultaInternaChavePixRequest {
+    string chave_pix = 2;
+}
+
+message  ConsultaChavePixResponse {
+    string cliente_id = 1;
+    string chave_pix_id = 2;
+    TipoChaveRequest tipo_chave = 3;
+    string valor_chave = 4;
+    Conta conta = 5;
+    google.protobuf.Timestamp persistence_timestamp = 7;
+}
+
+service ConsultaChavesPixPorClienteService{
+    rpc Consulta(ConsultaChavesPixPorClienteRequest) returns (ChavesPixPorClienteResponseList) {}
+}
+
+message ConsultaChavesPixPorClienteRequest {
+    string cliente_id = 1;
+}
+
+message ChavesPixPorClienteResponse{
+    string cliente_id = 1;
+    string chave_pix_id = 2;
+    TipoChaveRequest tipo_chave = 3;
+    string valor_chave = 4;
+    TipoContaRequest tipo_conta = 5;
+    google.protobuf.Timestamp persistence_timestamp = 6;
+}
+
+message ChavesPixPorClienteResponseList {
+    repeated ChavesPixPorClienteResponse lista_de_chaves = 1;
+}
+
+
+// ERROR MESSAGE
+message FieldErrorDetails {
+    string field = 1;
+    string message = 2;
+}
+
+message FieldErrorDetailsList {
+    repeated FieldErrorDetails field_errors = 1;
+}
