@@ -14,7 +14,7 @@ import io.micronaut.http.annotation.Post
 import io.micronaut.validation.Validated
 import javax.inject.Inject
 
-@Controller
+@Controller("/api/v1/chave")
 class RegistraChaveController(@Inject val cadastraChaveStub: CadastraChavePixServiceBlockingStub) {
 
     @Post
